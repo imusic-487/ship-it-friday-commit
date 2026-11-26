@@ -31,6 +31,12 @@ def main():
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8", newline="") as handle:
         handle.write(ENTRY)
+    # Read back what was written and confirm it matches byte for byte,
+    # so a silent write failure can never pass as a valid entry.
+    with open(OUTPUT_PATH, "r", encoding="utf-8", newline="") as handle:
+        written = handle.read()
+    if written != ENTRY:
+        raise ValueError("read-back mismatch: entry on disk differs from ENTRY")
     print("Wrote %d chars to %s" % (len(ENTRY), OUTPUT_PATH))
 
 
